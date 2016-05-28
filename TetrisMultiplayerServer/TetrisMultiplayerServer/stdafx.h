@@ -7,8 +7,13 @@
 
 #include "targetver.h"
 
-#include <stdio.h>
+#include <iostream>
+#include <memory>
+#include <string>
+#include <thread>
 #include <tchar.h>
+
+using namespace std;
 
 
 
