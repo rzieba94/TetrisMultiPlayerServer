@@ -15,8 +15,6 @@ SingleGame::~SingleGame()
 
 void SingleGame::run()
 {
-	sf::RenderWindow window(sf::VideoMode(200, 400), "Tetris Multiplayer");
-	window.setActive(true);
 	placeNewTetromino();
 	while (window.isOpen())
 	{

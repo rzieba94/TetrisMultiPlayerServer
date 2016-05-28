@@ -15,6 +15,7 @@ public:
 	~MainServerThread();
 	void launchServerThread();
 	thread * getServerThread();
+	void rejectNewConnection(shared_ptr<sf::TcpSocket> clientSocket);
 private:
 	void run();
 	void acceptNewConnection(string nick, shared_ptr<sf::TcpSocket> clientSocket);

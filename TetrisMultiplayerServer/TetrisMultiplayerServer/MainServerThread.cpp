@@ -35,16 +35,15 @@ void MainServerThread::run()
 		}
 		sf::Packet packet;
 		clientSocket->receive(packet);
-		string cmd;
-		string nick;
-		packet >> cmd >> nick;
-		if (cmd == "connect" && !nick.empty())
+		ClientHelloMsg msg;
+		packet >> msg.cmd >> msg.nick;
+		if (msg.cmd == "connect" && !msg.nick.empty())
 		{
-			acceptNewConnection(nick, clientSocket);
+			acceptNewConnection(msg.nick, clientSocket);
 		}
 		else
 		{
-			cout << "Podczas tworzenia watku klienta wystapil blad.";
+			rejectNewConnection(clientSocket);
 		}
 	}
 }
@@ -55,6 +54,18 @@ void MainServerThread::acceptNewConnection(string nick, shared_ptr<sf::TcpSocket
 	shared_ptr<UserServerThread> userServerThread = shared_ptr<UserServerThread> (new UserServerThread(remoteUser));
 	userThreadsList.push_back(userServerThread);
 	userServerThread->launchUserThread();
+}
+
+void MainServerThread::rejectNewConnection(shared_ptr<sf::TcpSocket> clientSocket)
+{
+	cout << "Podczas tworzenia watku klienta wystapil blad.";
+	ConnectionStatusMsg msg;
+	msg.cmd = "connStatus";
+	msg.status = "rejected";
+	sf::Packet packet;
+	packet << msg.cmd << msg.status;
+	clientSocket->send(packet);
+	clientSocket->disconnect();
 }
 
 thread * MainServerThread::getServerThread()
