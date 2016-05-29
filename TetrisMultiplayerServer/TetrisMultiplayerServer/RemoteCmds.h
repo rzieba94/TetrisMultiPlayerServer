@@ -75,3 +75,10 @@ struct ConnectToGame
 	int cmd; //connectToGame
 	int gameId; //id gry
 };
+
+//serwer wysyla do klientow podczas oczekiwania na dolaczenie uzytkownikow
+struct WaitingTime
+{
+	int cmd;
+	int waitingtime;
+};

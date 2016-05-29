@@ -9,6 +9,8 @@ public:
 private:
 	void run();
 	bool waitForPlayers();
-	
+	void sendWaitingMsg(int time);
+	void sendTimeoutMsg();
+	bool checkIfGameEnded();
 };
 

@@ -15,7 +15,7 @@
 class ParentGameEngine
 {
 public:
-	ParentGameEngine(shared_ptr<RemoteUser> ownerUser, int gameId, int playersNumber, GameType gameType);
+	ParentGameEngine(shared_ptr<RemoteUser> ownerUser, int gameId, int playersNumber, GameType gameType, int columnsNumber);
 	virtual ~ParentGameEngine();
 	void startThread();
 	void registerMove(shared_ptr<UserMove> userMove);
@@ -31,6 +31,7 @@ protected:
 	void sendStartGameMsg();
 	void sendEndGameMsg(shared_ptr<RemoteUser> player);
 
+	int columnsNumber;
 	GameType gameType;
 	int playersNumber;
 	int gameId;
