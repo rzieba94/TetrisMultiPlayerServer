@@ -4,7 +4,7 @@
 
 using namespace std;
 
-SingleGame::SingleGame(shared_ptr<RemoteUser>ownerUser) : ParentGameEngine(ownerUser)
+SingleGame::SingleGame(shared_ptr<RemoteUser>ownerUser, int gameId) : ParentGameEngine(ownerUser, gameId, 1, GameType::single)
 {
 }
 
@@ -15,6 +15,7 @@ SingleGame::~SingleGame()
 
 void SingleGame::run()
 {
+	sendStartGameMsg();
 	placeNewTetromino();
 	while (true)
 	{
@@ -24,6 +25,7 @@ void SingleGame::run()
 		{
 			if (!placeNewTetromino())
 			{
+				sendEndGameMsg();
 				return;
 			}
 		}
@@ -41,4 +43,9 @@ bool SingleGame::placeNewTetromino()
 bool SingleGame::checkForInactiveBlock()
 {
 	return ParentGameEngine::checkForInactiveBlock(usersList.front());
+}
+
+void SingleGame::sendEndGameMsg()
+{
+	ParentGameEngine::sendEndGameMsg(usersList.front());
 }

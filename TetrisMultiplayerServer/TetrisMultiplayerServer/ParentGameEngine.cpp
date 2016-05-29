@@ -3,7 +3,8 @@
 
 using namespace std;
 
-ParentGameEngine::ParentGameEngine(shared_ptr<RemoteUser> ownerUser) : notActiveTetrominos(sf::Vector2i(100, 200)), tetrominoFactory(), moveQueue()
+ParentGameEngine::ParentGameEngine(shared_ptr<RemoteUser> ownerUser, int gameId, int playersNumber, GameType gameType)
+	: notActiveTetrominos(sf::Vector2i(5, 10)), tetrominoFactory(), moveQueue(), gameId(gameId), playersNumber(playersNumber), gameType(gameType)
 {
 	this->startTime = clock();
 	this->usersList.push_back(ownerUser);
@@ -35,9 +36,9 @@ void ParentGameEngine::moveDownAllActiveBlocks()
 	{
 		player->getActiveTetromino()->moveDown();
 		MoveMsg msg;
-		msg.cmd = "move";
-		msg.moveType = "DOWN";
-		msg.userId =  player->getNick(); //TODO: zmienic na id uzytkownika
+		msg.cmd = Cmds::move;
+		msg.moveType = MoveType::DOWN;
+		msg.userId = player->getNick(); //TODO: zmienic na id uzytkownika
 		msg.dropCount = 0;
 		sf::Packet packet;
 		packet << msg.cmd << msg.moveType << msg.userId << msg.dropCount;
@@ -52,9 +53,23 @@ void ParentGameEngine::moveDownAllActiveBlocks()
 bool ParentGameEngine::placeNewTetromino(shared_ptr<RemoteUser> player)
 {
 	shared_ptr<Tetromino> newTetromino = tetrominoFactory.getRandomTetromino(player->getStartPosition());
-	if (!newTetromino->checkColision(notActiveTetrominos, DOWN, 200))
+	if (!newTetromino->checkColision(notActiveTetrominos, DOWN, 10))
 	{
 		player->setActiveTetromino(newTetromino);
+
+		PlaceTetromino msg;
+		msg.cmd = Cmds::placeTetromino;
+		msg.tetrominoType = newTetromino->getTetrominoType();
+		msg.userId = player->getNick();
+		msg.positionX = newTetromino->getPosition->x;
+		msg.positionY = newTetromino->getPosition->y;
+		sf::Packet packet;
+		packet << msg.cmd << msg.tetrominoType << msg.userId << msg.positionX << msg.positionY;
+
+		for (shared_ptr<RemoteUser> playerr : usersList)
+		{
+			playerr->send(packet);
+		}
 		return true;
 	}
 	else
@@ -65,6 +80,8 @@ bool ParentGameEngine::placeNewTetromino(shared_ptr<RemoteUser> player)
 
 int ParentGameEngine::getLineToClear()
 {
+	int lineNumber = -1;
+
 	list<shared_ptr<Brick>> bricksList = notActiveTetrominos.getBricksList();
 	vector <int> bricksInRowsCounter(20, 0);
 
@@ -79,16 +96,31 @@ int ParentGameEngine::getLineToClear()
 	{
 		if (bricksInRowsCounter[lineNo] == 10)
 		{
-			return lineNo;
+			lineNumber = lineNo;
+			break;
 		}
 	}
-	return -1;
+
+	if (lineNumber != -1)
+	{
+		ClearLine msg;
+		msg.cmd = Cmds::clearLine;
+		msg.lineNumber = lineNumber;
+		sf::Packet packet;
+		packet << msg.cmd << msg.lineNumber;
+		for (shared_ptr<RemoteUser> playerr : usersList)
+		{
+			playerr->send(packet);
+		}
+	}
+
+	return lineNumber;
 }
 
 bool ParentGameEngine::checkForInactiveBlock(shared_ptr<RemoteUser> player)
 {
 	shared_ptr<Tetromino> activeTetromino = player->getActiveTetromino();
-	if (activeTetromino->checkColision(notActiveTetrominos, DOWN, 200))
+	if (activeTetromino->checkColision(notActiveTetrominos, DOWN, 10))
 	{
 		notActiveTetrominos.addTetrisShape(activeTetromino);
 		return true;
@@ -110,7 +142,7 @@ void ParentGameEngine::checkPlayersMove()
 		MoveType moveType = move->getMoveType();
 		
 		MoveMsg msg;
-		msg.cmd = "move";
+		msg.cmd = Cmds::move;
 		msg.userId = user->getNick();
 		msg.dropCount = 0;
 		
@@ -119,7 +151,7 @@ void ParentGameEngine::checkPlayersMove()
 		case DOWN:
 			if (activeTetromino->checkColision(notActiveTetrominos, moveType, 10))
 			{
-				msg.moveType = "DOWN";
+				msg.moveType = MoveType::DOWN;
 				activeTetromino->moveDown();
 				isSuccess = true;
 			}
@@ -127,7 +159,7 @@ void ParentGameEngine::checkPlayersMove()
 		case LEFT:
 			if (activeTetromino->checkColision(notActiveTetrominos, moveType, 10))
 			{
-				msg.moveType = "LEFT";
+				msg.moveType = MoveType::LEFT;
 				activeTetromino->moveLeft();
 				isSuccess = true;
 			}
@@ -135,7 +167,7 @@ void ParentGameEngine::checkPlayersMove()
 		case RIGHT:
 			if (activeTetromino->checkColision(notActiveTetrominos, moveType, 10))
 			{
-				msg.moveType = "RIGHT";
+				msg.moveType = MoveType::RIGHT;
 				activeTetromino->moveRight();
 				isSuccess = true;
 			}
@@ -144,7 +176,7 @@ void ParentGameEngine::checkPlayersMove()
 			int dropCount = activeTetromino->getDropCount(notActiveTetrominos, 10);
 			if (dropCount > 0)
 			{
-				msg.moveType = "DROP";
+				msg.moveType = MoveType::DROP;
 				msg.dropCount = dropCount;
 				activeTetromino->drop(dropCount);
 				isSuccess = true;
@@ -173,4 +205,32 @@ void ParentGameEngine::addPlayer(shared_ptr<RemoteUser> player)
 void ParentGameEngine::registerMove(shared_ptr<UserMove> userMove)
 {
 	moveQueue.push(userMove);
+}
+
+void ParentGameEngine::sendStartGameMsg()
+{
+	StartGame msg;
+	msg.cmd = Cmds::startGame;
+	msg.gameType = gameType;
+	msg.playersNumber = playersNumber;
+	for (shared_ptr<RemoteUser> player : usersList)
+	{
+		msg.userIds += player->getNick() + ";";
+	}
+	sf::Packet packet;
+	packet << msg.cmd << msg.gameType << msg.playersNumber << msg.userIds;
+
+	for (shared_ptr<RemoteUser> player : usersList)
+	{
+		player->send(packet);
+	}
+}
+
+void ParentGameEngine::sendEndGameMsg(shared_ptr<RemoteUser> player)
+{
+	SimpleCommand msg;
+	msg.cmd = Cmds::endGame;
+	sf::Packet packet;
+	packet << msg.cmd;
+	player->send(packet);
 }

@@ -2,7 +2,7 @@
 #include "MainServerThread.h"
 
 
-MainServerThread::MainServerThread(int portNumber) : portNumber(portNumber)
+MainServerThread::MainServerThread(int portNumber) : portNumber(portNumber), gamesList()
 {
 }
 
@@ -37,7 +37,7 @@ void MainServerThread::run()
 		clientSocket->receive(packet);
 		ClientHelloMsg msg;
 		packet >> msg.cmd >> msg.nick;
-		if (msg.cmd == "connect" && !msg.nick.empty())
+		if (msg.cmd == Cmds::connect && !msg.nick.empty())
 		{
 			acceptNewConnection(msg.nick, clientSocket);
 		}
@@ -51,7 +51,7 @@ void MainServerThread::run()
 void MainServerThread::acceptNewConnection(string nick, shared_ptr<sf::TcpSocket> clientSocket)
 {
 	shared_ptr<RemoteUser> remoteUser = shared_ptr<RemoteUser>(new RemoteUser(nick, clientSocket));
-	shared_ptr<UserServerThread> userServerThread = shared_ptr<UserServerThread> (new UserServerThread(remoteUser));
+	shared_ptr<UserServerThread> userServerThread = shared_ptr<UserServerThread> (new UserServerThread(remoteUser, gamesList));
 	userThreadsList.push_back(userServerThread);
 	userServerThread->launchUserThread();
 }
@@ -60,7 +60,7 @@ void MainServerThread::rejectNewConnection(shared_ptr<sf::TcpSocket> clientSocke
 {
 	cout << "Podczas tworzenia watku klienta wystapil blad.";
 	ConnectionStatusMsg msg;
-	msg.cmd = "connStatus";
+	msg.cmd = Cmds::connStatus;
 	msg.status = "rejected";
 	sf::Packet packet;
 	packet << msg.cmd << msg.status;

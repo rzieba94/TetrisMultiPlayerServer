@@ -24,5 +24,6 @@ private:
 	thread serverThread;
 	const int portNumber;
 	list<shared_ptr<UserServerThread>> userThreadsList;
+	list<shared_ptr<ParentGameEngine>> gamesList;
 };
 

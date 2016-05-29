@@ -13,7 +13,7 @@
 class ParentGameEngine
 {
 public:
-	ParentGameEngine(shared_ptr<RemoteUser>);
+	ParentGameEngine(shared_ptr<RemoteUser> ownerUser, int gameId, int playersNumber, GameType gameType);
 	virtual ~ParentGameEngine();
 	void startThread();
 	void registerMove(shared_ptr<UserMove> userMove);
@@ -26,7 +26,12 @@ protected:
 	virtual bool placeNewTetromino(shared_ptr<RemoteUser> player);
 	virtual bool checkForInactiveBlock(shared_ptr<RemoteUser> player);
 	int getLineToClear();
+	void sendStartGameMsg();
+	void sendEndGameMsg(shared_ptr<RemoteUser> player);
 
+	GameType gameType;
+	int playersNumber;
+	int gameId;
 	TetrominoFactory tetrominoFactory;
 	thread gameThread;
 	concurrency::concurrent_queue<shared_ptr<UserMove>> moveQueue;

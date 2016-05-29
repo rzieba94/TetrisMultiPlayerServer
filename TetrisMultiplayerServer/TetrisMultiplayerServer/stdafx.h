@@ -12,6 +12,10 @@
 #include <string>
 #include <thread>
 #include <tchar.h>
+#include "GameType.h"
+#include "Cmds.h"
+#include "RemoteCmds.h"
+#include "TetrominoType.h"
 
 using namespace std;
 

@@ -20,6 +20,7 @@ public:
 	void clearLine(int lineNumber);
 	list<shared_ptr<Brick>> getBricksList();
 	TetrominoType getTetrominoType();
+	sf::Vector2i getPosition();
 	bool isEmptyBricksList();
 protected:
 	Tetromino(sf::Vector2i & position, const sf::Color * color, TetrominoType tetrominoType);

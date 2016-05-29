@@ -6,7 +6,7 @@
 class UserServerThread
 {
 public:
-	UserServerThread(shared_ptr<RemoteUser> remoteUser);
+	UserServerThread(shared_ptr<RemoteUser> remoteUser, list<shared_ptr<ParentGameEngine>> & gamesList);
 	~UserServerThread();
 	void launchUserThread();
 private: 
@@ -15,9 +15,10 @@ private:
 	void forwardMove(sf::Packet packet);
 	void sendWaitingGames(sf::Packet packet);
 	void connectToGame(sf::Packet packet);
-	shared_ptr<ParentGameEngine> getGame();
+	int getCurrentGameId();
 
 	shared_ptr<RemoteUser> remoteUser;
 	shared_ptr<ParentGameEngine> game;
+	list<shared_ptr<ParentGameEngine>> gamesList;
 };
 

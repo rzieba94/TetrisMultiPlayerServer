@@ -180,3 +180,8 @@ TetrominoType Tetromino::getTetrominoType()
 {
 	return tetrominoType;
 }
+
+sf::Vector2i Tetromino::getPosition()
+{
+	return position;
+}
