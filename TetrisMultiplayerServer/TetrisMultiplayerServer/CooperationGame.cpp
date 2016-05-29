@@ -2,7 +2,7 @@
 #include "CooperationGame.h"
 
 
-CooperationGame::CooperationGame()
+CooperationGame::CooperationGame(shared_ptr<RemoteUser> ownerUser) : ParentGameEngine(ownerUser)
 {
 }
 

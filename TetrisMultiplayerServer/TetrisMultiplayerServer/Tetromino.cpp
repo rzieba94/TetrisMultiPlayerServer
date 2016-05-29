@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Tetromino.h"
 
-Tetromino::Tetromino(sf::Vector2i & position, const sf::Color * color) : TetrisShape(position)
+Tetromino::Tetromino(sf::Vector2i & position, const sf::Color * color, TetrominoType tetrominoType) : TetrisShape(position), tetrominoType(tetrominoType)
 {
 	this->color = color;
 }
@@ -174,4 +174,9 @@ list<shared_ptr<Brick>> Tetromino::getBricksList()
 bool Tetromino::isEmptyBricksList()
 {
 	return getBricksList().empty();
+}
+
+TetrominoType Tetromino::getTetrominoType()
+{
+	return tetrominoType;
 }

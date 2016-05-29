@@ -19,6 +19,7 @@ public:
 	void setStartPosition(sf::Vector2i startPosition);
 	int getScore();
 	void setScore(int score);
+	string getNick();
 private:
 	string nick;
 	shared_ptr<sf::TcpSocket> clientSocket;

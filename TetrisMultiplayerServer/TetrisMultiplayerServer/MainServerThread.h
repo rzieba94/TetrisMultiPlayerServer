@@ -4,6 +4,7 @@
 #include <iostream>
 #include "UserServerThread.h"
 #include "RemoteUser.h"
+#include "RemoteCmds.h"
 #include <list>
 
 using namespace std;

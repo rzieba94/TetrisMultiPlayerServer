@@ -27,24 +27,18 @@ void SingleGame::run()
 				return;
 			}
 		}
-		
 
 		checkFrameTime();
 		this_thread::sleep_for(chrono::milliseconds(10));
 	}
 }
 
-void SingleGame::checkPlayersMove()
-{
-	
-}
-
 bool SingleGame::placeNewTetromino()
 {
-	return placeNewTetromino(usersList.front());
+	return ParentGameEngine::placeNewTetromino(usersList.front());
 }
 
 bool SingleGame::checkForInactiveBlock()
 {
-	return checkForInactiveBlock(usersList.front());
+	return ParentGameEngine::checkForInactiveBlock(usersList.front());
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include "stdafx.h"
+#include <string>
 
 struct ClientHelloMsg
 {
@@ -11,4 +11,18 @@ struct ConnectionStatusMsg
 {
 	string cmd;
 	string status;
+};
+
+struct MoveMsg
+{
+	string cmd;
+	string moveType;
+	string userId;
+	int dropCount;
+};
+
+struct StartGame
+{
+	string cmd;
+	string gameType;
 };

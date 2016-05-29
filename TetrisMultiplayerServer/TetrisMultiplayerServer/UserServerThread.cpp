@@ -2,7 +2,7 @@
 #include "UserServerThread.h"
 
 
-UserServerThread::UserServerThread(shared_ptr<RemoteUser> remoteUser) : remoteUser(remoteUser)
+UserServerThread::UserServerThread(shared_ptr<RemoteUser> remoteUserd) : remoteUser(remoteUser)
 {
 }
 
@@ -27,7 +27,7 @@ void UserServerThread::run()
 	remoteUser->send(packet);
 
 	string cmd;
-	while (!cmd.empty && cmd != "end")
+	while (!cmd.empty() && cmd != "end")
 	{
 		if(cmd == "newGame") startNewGame(packet);
 		else if (cmd == "move") forwardMove(packet);
@@ -42,12 +42,38 @@ void UserServerThread::run()
 
 void UserServerThread::startNewGame(sf::Packet packet)
 {
-
+	StartGame msg;
+	packet << msg.cmd << msg.gameType;
+	if(msg.gameType == "single")
+	{
+		game = shared_ptr<ParentGameEngine> (new SingleGame(remoteUser));
+	}
+	else if (msg.gameType == "cooperation")
+	{
+		//game = shared_ptr<ParentGameEngine>(new CooperationGame(remoteUser));
+	}
 }
 
 void UserServerThread::forwardMove(sf::Packet packet)
 {
-
+	MoveMsg msg;
+	packet >> msg.cmd >> msg.moveType;
+	if (msg.moveType == "DOWN")
+	{
+		game->registerMove(shared_ptr<UserMove>(new UserMove(remoteUser, DOWN)));
+	}
+	else if (msg.moveType == "LEFT")
+	{
+		game->registerMove(shared_ptr<UserMove>(new UserMove(remoteUser, LEFT)));
+	}
+	else if (msg.moveType == "DROP")
+	{
+		game->registerMove(shared_ptr<UserMove>(new UserMove(remoteUser, DROP)));
+	}
+	else if (msg.moveType == "RIGHT")
+	{
+		game->registerMove(shared_ptr<UserMove>(new UserMove(remoteUser, RIGHT)));
+	}
 }
 
 void UserServerThread::sendWaitingGames(sf::Packet packet)
@@ -58,4 +84,9 @@ void UserServerThread::sendWaitingGames(sf::Packet packet)
 void UserServerThread::connectToGame(sf::Packet packet)
 {
 
+}
+
+shared_ptr<ParentGameEngine> UserServerThread::getGame()
+{
+	return game;
 }

@@ -52,3 +52,8 @@ void RemoteUser::setScore(int score)
 {
 	this->score = score;
 }
+
+string RemoteUser::getNick()
+{
+	return nick;
+}

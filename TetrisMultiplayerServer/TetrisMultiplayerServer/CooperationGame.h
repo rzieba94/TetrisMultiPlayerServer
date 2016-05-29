@@ -4,7 +4,7 @@
 class CooperationGame : public ParentGameEngine
 {
 public:
-	CooperationGame();
+	CooperationGame(shared_ptr<RemoteUser> ownerUser);
 	~CooperationGame();
 };
 

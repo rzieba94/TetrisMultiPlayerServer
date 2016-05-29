@@ -12,8 +12,5 @@ private:
 	void run();
 	bool placeNewTetromino();
 	bool checkForInactiveBlock();
-	bool placeNewTetromino(shared_ptr<RemoteUser> player);
-	bool checkForInactiveBlock(shared_ptr<RemoteUser> player);
-	void checkPlayersMove();
 };
 

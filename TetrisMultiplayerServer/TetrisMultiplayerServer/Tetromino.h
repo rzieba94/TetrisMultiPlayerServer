@@ -4,6 +4,7 @@
 #include <list>
 #include <memory>
 #include <SFML/Graphics/Color.hpp>
+#include "TetrominoType.h"
 
 class Tetromino : public TetrisShape
 {
@@ -18,9 +19,11 @@ public:
 	bool checkColision(TetrisShape & tetrisShape, MoveType moveType, int boardWidth);
 	void clearLine(int lineNumber);
 	list<shared_ptr<Brick>> getBricksList();
+	TetrominoType getTetrominoType();
 	bool isEmptyBricksList();
 protected:
-	Tetromino(sf::Vector2i & position, const sf::Color * color);
+	Tetromino(sf::Vector2i & position, const sf::Color * color, TetrominoType tetrominoType);
+	TetrominoType tetrominoType;
 	const sf::Color * color;
 	list<shared_ptr<Brick>> bricksList;
 private:

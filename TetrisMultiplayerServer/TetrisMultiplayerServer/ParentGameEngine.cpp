@@ -34,6 +34,18 @@ void ParentGameEngine::moveDownAllActiveBlocks()
 	for (shared_ptr<RemoteUser> player : usersList)
 	{
 		player->getActiveTetromino()->moveDown();
+		MoveMsg msg;
+		msg.cmd = "move";
+		msg.moveType = "DOWN";
+		msg.userId =  player->getNick(); //TODO: zmienic na id uzytkownika
+		msg.dropCount = 0;
+		sf::Packet packet;
+		packet << msg.cmd << msg.moveType << msg.userId << msg.dropCount;
+
+		for (shared_ptr<RemoteUser> playerr : usersList)
+		{
+			playerr->send(packet);
+		}
 	}
 }
 
@@ -85,4 +97,80 @@ bool ParentGameEngine::checkForInactiveBlock(shared_ptr<RemoteUser> player)
 	{
 		return false;
 	}
+}
+
+void ParentGameEngine::checkPlayersMove()
+{
+	shared_ptr<UserMove> move;
+	if (moveQueue.try_pop(move))
+	{
+		bool isSuccess = false;
+		shared_ptr<RemoteUser> user = move->getUser();
+		shared_ptr<Tetromino> activeTetromino = user->getActiveTetromino();
+		MoveType moveType = move->getMoveType();
+		
+		MoveMsg msg;
+		msg.cmd = "move";
+		msg.userId = user->getNick();
+		msg.dropCount = 0;
+		
+		switch (moveType)
+		{
+		case DOWN:
+			if (activeTetromino->checkColision(notActiveTetrominos, moveType, 10))
+			{
+				msg.moveType = "DOWN";
+				activeTetromino->moveDown();
+				isSuccess = true;
+			}
+			break;
+		case LEFT:
+			if (activeTetromino->checkColision(notActiveTetrominos, moveType, 10))
+			{
+				msg.moveType = "LEFT";
+				activeTetromino->moveLeft();
+				isSuccess = true;
+			}
+			break;
+		case RIGHT:
+			if (activeTetromino->checkColision(notActiveTetrominos, moveType, 10))
+			{
+				msg.moveType = "RIGHT";
+				activeTetromino->moveRight();
+				isSuccess = true;
+			}
+			break;
+		case DROP:
+			int dropCount = activeTetromino->getDropCount(notActiveTetrominos, 10);
+			if (dropCount > 0)
+			{
+				msg.moveType = "DROP";
+				msg.dropCount = dropCount;
+				activeTetromino->drop(dropCount);
+				isSuccess = true;
+			}
+			break;
+		}
+
+		if (isSuccess)
+		{
+			sf::Packet packet;
+			packet << msg.cmd << msg.moveType << msg.userId << msg.dropCount;
+
+			for (shared_ptr<RemoteUser> playerr : usersList)
+			{
+				playerr->send(packet);
+			}
+		}	
+	}
+}
+
+void ParentGameEngine::addPlayer(shared_ptr<RemoteUser> player)
+{
+	usersList.push_back(player);
+}
+
+void ParentGameEngine::registerMove(shared_ptr<UserMove> userMove)
+{
+	moveQueue.push(userMove);
 }

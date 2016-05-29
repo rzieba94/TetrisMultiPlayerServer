@@ -12,7 +12,6 @@
 #include <string>
 #include <thread>
 #include <tchar.h>
-#include "RemoteCmds.h"
 
 using namespace std;
 
