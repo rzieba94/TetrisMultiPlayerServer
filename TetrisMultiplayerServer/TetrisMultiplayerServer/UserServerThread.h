@@ -2,6 +2,8 @@
 #include "RemoteUser.h"
 #include "SingleGame.h"
 #include "CooperationGame.h"
+#include "GameType.h"
+#include "Cmds.h"
 
 class UserServerThread
 {

@@ -61,8 +61,9 @@ bool ParentGameEngine::placeNewTetromino(shared_ptr<RemoteUser> player)
 		msg.cmd = Cmds::placeTetromino;
 		msg.tetrominoType = newTetromino->getTetrominoType();
 		msg.userId = player->getNick();
-		msg.positionX = newTetromino->getPosition->x;
-		msg.positionY = newTetromino->getPosition->y;
+		sf::Vector2i newTetrominoPosition = newTetromino->getPosition();
+		msg.positionX = newTetrominoPosition.x;
+		msg.positionY = newTetrominoPosition.y;
 		sf::Packet packet;
 		packet << msg.cmd << msg.tetrominoType << msg.userId << msg.positionX << msg.positionY;
 

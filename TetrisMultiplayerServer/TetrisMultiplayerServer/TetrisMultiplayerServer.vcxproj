@@ -158,7 +158,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Brick.h" />
+    <ClInclude Include="Cmds.h" />
     <ClInclude Include="CooperationGame.h" />
+    <ClInclude Include="GameType.h" />
     <ClInclude Include="MainServerThread.h" />
     <ClInclude Include="MoveType.h" />
     <ClInclude Include="ParentGameEngine.h" />

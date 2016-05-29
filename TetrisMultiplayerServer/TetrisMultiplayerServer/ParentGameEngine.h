@@ -9,6 +9,8 @@
 #include <concurrent_queue.h>
 #include "UserMove.h"
 #include "RemoteCmds.h"
+#include "GameType.h"
+#include "Cmds.h"
 
 class ParentGameEngine
 {
