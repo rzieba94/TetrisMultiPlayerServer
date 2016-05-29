@@ -2,7 +2,7 @@
 #include "UserServerThread.h"
 
 
-UserServerThread::UserServerThread(shared_ptr<RemoteUser> remoteUserd) : remoteUser(remoteUser)
+UserServerThread::UserServerThread(shared_ptr<RemoteUser> remoteUser) : remoteUser(remoteUser)
 {
 }
 
@@ -26,7 +26,7 @@ void UserServerThread::run()
 	packet << msg.cmd << msg.status;
 	remoteUser->send(packet);
 
-	string cmd;
+	string cmd = "start";
 	while (!cmd.empty() && cmd != "end")
 	{
 		if(cmd == "newGame") startNewGame(packet);

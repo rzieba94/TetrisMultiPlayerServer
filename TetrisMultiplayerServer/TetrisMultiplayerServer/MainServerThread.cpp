@@ -29,7 +29,7 @@ void MainServerThread::run()
 		}
 
 		shared_ptr<sf::TcpSocket> clientSocket = shared_ptr<sf::TcpSocket>(new sf::TcpSocket);
-		if (listener.accept(*clientSocket) != sf::Socket::Done)
+		if (listener.accept(*clientSocket.get()) != sf::Socket::Done)
 		{
 			cout << "Podczas laczenia do serwera wystapil blad.";
 		}
