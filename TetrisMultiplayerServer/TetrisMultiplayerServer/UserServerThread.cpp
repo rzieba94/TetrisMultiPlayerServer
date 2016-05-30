@@ -12,13 +12,14 @@ UserServerThread::~UserServerThread()
 
 void UserServerThread::launchUserThread()
 {
-	thread(&UserServerThread::run, this);
+	thread t1(&UserServerThread::run, this);
+	t1.join();
 }
 
 void UserServerThread::run()
 {
 	cout << "Rozpoczeto watek uzytkownika ";
-
+	
 	ConnectionStatusMsg msg;
 	msg.cmd = Cmds::connStatus;
 	msg.status = "accepted";
@@ -27,6 +28,7 @@ void UserServerThread::run()
 	remoteUser->send(packet);
 
 	int cmd = Cmds::connStatus;
+	
 	while (cmd != Cmds::endGame)
 	{
 		if(cmd == Cmds::startGame) startNewGame(packet);
@@ -37,16 +39,21 @@ void UserServerThread::run()
 		packet.clear();
 		packet = remoteUser->receive();
 		packet >> cmd;
+		//std::this_thread::sleep_for(std::chrono::microseconds(200));
 	}
+	cout << "koniec gry" << endl;
 }
 
 void UserServerThread::startNewGame(sf::Packet packet)
 {
+	cout << endl << "Rozpoczecie nowej gry" << endl;
 	StartGame msg;
-	packet << msg.cmd << msg.gameType << msg.playersNumber;
+	packet >> msg.gameType >> msg.playersNumber >> msg.userIds;
+	cout << msg.gameType << endl;
 	if(msg.gameType == GameType::single)
 	{
 		game = shared_ptr<ParentGameEngine> (new SingleGame(remoteUser, getCurrentGameId()));
+		game->startThread();
 		gamesList.push_back(game);
 	}
 	else if (msg.gameType == GameType::cooperation)
