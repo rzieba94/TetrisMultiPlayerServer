@@ -4,7 +4,7 @@
 
 using namespace std;
 
-SingleGame::SingleGame(shared_ptr<RemoteUser>ownerUser, int gameId) : ParentGameEngine(ownerUser, gameId, 1, GameType::single, 10)
+SingleGame::SingleGame(shared_ptr<RemoteUser>ownerUser, int gameId) : ParentGameEngine(ownerUser, gameId, 1, GameType::single, 100)
 {
 }
 
@@ -18,7 +18,8 @@ void SingleGame::run()
 	
 	cout << "Uzytkownik " << usersList.front()->getNick() << " rozpoczal nowa gre pojedyncza";
 	sendStartGameMsg();
-	/*placeNewTetromino();
+	placeNewTetromino();
+	/*
 	while (true)
 	{
 		checkPlayersMove();
