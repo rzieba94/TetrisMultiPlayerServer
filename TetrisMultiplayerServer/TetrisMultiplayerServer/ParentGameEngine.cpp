@@ -70,7 +70,6 @@ bool ParentGameEngine::placeNewTetromino(shared_ptr<RemoteUser> player)
 		for (shared_ptr<RemoteUser> playerr : usersList)
 		{
 			playerr->send(packet);
-			cout << "WYSLANY KLOCEK" << endl;
 		}
 		return true;
 	}

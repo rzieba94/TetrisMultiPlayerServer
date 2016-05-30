@@ -19,7 +19,6 @@ void SingleGame::run()
 	cout << "Uzytkownik " << usersList.front()->getNick() << " rozpoczal nowa gre pojedyncza";
 	sendStartGameMsg();
 	placeNewTetromino();
-	/*
 	while (true)
 	{
 		checkPlayersMove();
@@ -33,11 +32,10 @@ void SingleGame::run()
 				return;
 			}
 		}
-
 		checkFrameTime();
 		this_thread::sleep_for(chrono::milliseconds(10));
 	}
-	*/
+	
 }
 
 bool SingleGame::placeNewTetromino()
