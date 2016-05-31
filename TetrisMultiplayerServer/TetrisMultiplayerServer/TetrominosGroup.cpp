@@ -17,6 +17,7 @@ void TetrominosGroup::clearLine(int lineNumber)
 	{
 		tetrisShape->clearLine(lineNumber);
 	}
+	deleteUnusedShapes();
 }
 
 list<shared_ptr<Brick>> TetrominosGroup::getBricksList()
@@ -58,7 +59,7 @@ void TetrominosGroup::deleteUnusedShapes()
 		{
 			it = tetrisShapesList.erase(it);
 		}
-		else
+		else if (it != tetrisShapesList.end())
 		{
 			it++;
 		}
