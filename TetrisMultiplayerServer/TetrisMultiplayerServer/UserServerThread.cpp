@@ -52,7 +52,7 @@ void UserServerThread::startNewGame(sf::Packet packet)
 	cout << msg.gameType << endl;
 	if(msg.gameType == GameType::single)
 	{
-		remoteUser->setStartPosition(sf::Vector2i(50,40));
+		remoteUser->setStartPosition(sf::Vector2i(5, 2));
 		game = shared_ptr<ParentGameEngine> (new SingleGame(remoteUser, getCurrentGameId()));
 		game->startThread();
 		gamesList.push_back(game);
