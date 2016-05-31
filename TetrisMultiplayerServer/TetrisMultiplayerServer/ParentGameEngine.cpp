@@ -165,7 +165,7 @@ void ParentGameEngine::checkPlayersMove()
 		switch (moveType)
 		{
 		case DOWN:
-			if (activeTetromino->isColision(notActiveTetrominos, moveType, columnsNumber))
+			if (!activeTetromino->isColision(notActiveTetrominos, moveType, columnsNumber))
 			{
 				msg.moveType = MoveType::DOWN;
 				activeTetromino->moveDown();
@@ -173,7 +173,7 @@ void ParentGameEngine::checkPlayersMove()
 			}
 			break;
 		case LEFT:
-			if (activeTetromino->isColision(notActiveTetrominos, moveType, columnsNumber))
+			if (!activeTetromino->isColision(notActiveTetrominos, moveType, columnsNumber))
 			{
 				msg.moveType = MoveType::LEFT;
 				activeTetromino->moveLeft();
@@ -181,7 +181,7 @@ void ParentGameEngine::checkPlayersMove()
 			}
 			break;
 		case RIGHT:
-			if (activeTetromino->isColision(notActiveTetrominos, moveType, columnsNumber))
+			if (!activeTetromino->isColision(notActiveTetrominos, moveType, columnsNumber))
 			{
 				msg.moveType = MoveType::RIGHT;
 				activeTetromino->moveRight();
