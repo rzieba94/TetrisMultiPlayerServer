@@ -67,7 +67,7 @@ void UserServerThread::startNewGame(sf::Packet packet)
 void UserServerThread::forwardMove(sf::Packet packet)
 {
 	MoveMsg msg;
-	packet >> msg.cmd >> msg.moveType;
+	packet >> msg.moveType;
 	if (msg.moveType == MoveType::DOWN)
 	{
 		game->registerMove(shared_ptr<UserMove>(new UserMove(remoteUser, DOWN)));

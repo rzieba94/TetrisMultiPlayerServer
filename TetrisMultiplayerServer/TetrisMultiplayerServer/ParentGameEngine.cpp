@@ -152,7 +152,7 @@ void ParentGameEngine::checkPlayersMove()
 		shared_ptr<RemoteUser> user = move->getUser();
 		shared_ptr<Tetromino> activeTetromino = user->getActiveTetromino();
 		MoveType moveType = move->getMoveType();
-		
+
 		MoveMsg msg;
 		msg.cmd = Cmds::move;
 		msg.userId = user->getNick();
@@ -200,7 +200,7 @@ void ParentGameEngine::checkPlayersMove()
 		{
 			sf::Packet packet;
 			packet << msg.cmd << msg.moveType << msg.userId << msg.dropCount;
-
+			cout << "check" << endl;
 			for (shared_ptr<RemoteUser> playerr : usersList)
 			{
 				playerr->send(packet);

@@ -4,7 +4,7 @@
 
 using namespace std;
 
-SingleGame::SingleGame(shared_ptr<RemoteUser>ownerUser, int gameId) : ParentGameEngine(ownerUser, gameId, 1, GameType::single, 100)
+SingleGame::SingleGame(shared_ptr<RemoteUser>ownerUser, int gameId) : ParentGameEngine(ownerUser, gameId, 1, GameType::single, 10)
 {
 }
 
