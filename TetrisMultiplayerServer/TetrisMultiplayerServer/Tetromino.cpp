@@ -73,7 +73,7 @@ int Tetromino::getDropCount(TetrisShape & tetrisShape, int boardWidth)
 		for (it = brickPositions.begin(); it != brickPositions.end(); ++it)
 		{
 			it->y += 1;
-			if (checkColision(*it, boardWidth, otherBricksList))
+			if (isColision(*it, boardWidth, otherBricksList))
 			{
 				return dropCounter;
 			}
@@ -83,7 +83,7 @@ int Tetromino::getDropCount(TetrisShape & tetrisShape, int boardWidth)
 	return dropCounter;
 }
 
-bool Tetromino::checkColision(TetrisShape & tetrisShape, MoveType moveType, int boardWidth)
+bool Tetromino::isColision(TetrisShape & tetrisShape, MoveType moveType, int boardWidth)
 {
 	sf::Vector2i moveVector;
 	list<shared_ptr<Brick>> otherBricksList = tetrisShape.getBricksList();
@@ -113,7 +113,7 @@ bool Tetromino::checkColision(TetrisShape & tetrisShape, MoveType moveType, int 
 			currentBrickPosition.x += moveVector.x;
 			currentBrickPosition.y += moveVector.y;
 		}
-		if (checkColision(currentBrickPosition, boardWidth, otherBricksList))
+		if (isColision(currentBrickPosition, boardWidth, otherBricksList))
 		{
 			return true;
 		}
@@ -121,7 +121,7 @@ bool Tetromino::checkColision(TetrisShape & tetrisShape, MoveType moveType, int 
 	return false;
 }
 
-bool Tetromino::checkColision(sf::Vector2i currentBrickPosition, int boardWidth, list<shared_ptr<Brick>> otherBricksList)
+bool Tetromino::isColision(sf::Vector2i currentBrickPosition, int boardWidth, list<shared_ptr<Brick>> otherBricksList)
 {
 	if (currentBrickPosition.x < 0 || currentBrickPosition.x >= boardWidth || currentBrickPosition.y >= 20) // TODO: wysokosc planszy powinna byc stala, nie zahardcodowana
 	{

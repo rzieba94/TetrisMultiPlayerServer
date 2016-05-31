@@ -16,7 +16,7 @@ public:
 	void moveDown();
 	void drop(int rowsCount);
 	int getDropCount(TetrisShape & tetrisShape, int boardWidth);
-	bool checkColision(TetrisShape & tetrisShape, MoveType moveType, int boardWidth);
+	bool isColision(TetrisShape & tetrisShape, MoveType moveType, int boardWidth);
 	void clearLine(int lineNumber);
 	list<shared_ptr<Brick>> getBricksList();
 	TetrominoType getTetrominoType();
@@ -28,6 +28,6 @@ protected:
 	const sf::Color * color;
 	list<shared_ptr<Brick>> bricksList;
 private:
-	bool checkColision(sf::Vector2i currentBrickPosition, int boardWidth, list <shared_ptr<Brick>> otherBricksList);
+	bool isColision(sf::Vector2i currentBrickPosition, int boardWidth, list <shared_ptr<Brick>> otherBricksList);
 };
 

@@ -35,7 +35,7 @@ void ParentGameEngine::moveDownAllActiveBlocks()
 	for (shared_ptr<RemoteUser> player : usersList)
 	{
 		shared_ptr<Tetromino> activeTetromino = player->getActiveTetromino();
-		if (!activeTetromino->checkColision(notActiveTetrominos, DOWN, columnsNumber))
+		if (!activeTetromino->isColision(notActiveTetrominos, DOWN, columnsNumber))
 		{
 			player->getActiveTetromino()->moveDown();
 			MoveMsg msg;
@@ -57,7 +57,7 @@ void ParentGameEngine::moveDownAllActiveBlocks()
 bool ParentGameEngine::placeNewTetromino(shared_ptr<RemoteUser> player)
 {
 	shared_ptr<Tetromino> newTetromino = tetrominoFactory.getRandomTetromino(player->getStartPosition());
-	if (!newTetromino->checkColision(notActiveTetrominos, DOWN, columnsNumber))
+	if (!newTetromino->isColision(notActiveTetrominos, DOWN, columnsNumber))
 	{
 		player->setActiveTetromino(newTetromino);
 
@@ -136,7 +136,7 @@ int ParentGameEngine::getLineToClear()
 bool ParentGameEngine::checkForInactiveBlock(shared_ptr<RemoteUser> player)
 {
 	shared_ptr<Tetromino> activeTetromino = player->getActiveTetromino();
-	if (activeTetromino->checkColision(notActiveTetrominos, DOWN, columnsNumber))
+	if (activeTetromino->isColision(notActiveTetrominos, DOWN, columnsNumber))
 	{
 		notActiveTetrominos.addTetrisShape(activeTetromino);
 		return true;
@@ -165,7 +165,7 @@ void ParentGameEngine::checkPlayersMove()
 		switch (moveType)
 		{
 		case DOWN:
-			if (!activeTetromino->checkColision(notActiveTetrominos, moveType, columnsNumber))
+			if (activeTetromino->isColision(notActiveTetrominos, moveType, columnsNumber))
 			{
 				msg.moveType = MoveType::DOWN;
 				activeTetromino->moveDown();
@@ -173,7 +173,7 @@ void ParentGameEngine::checkPlayersMove()
 			}
 			break;
 		case LEFT:
-			if (!activeTetromino->checkColision(notActiveTetrominos, moveType, columnsNumber))
+			if (activeTetromino->isColision(notActiveTetrominos, moveType, columnsNumber))
 			{
 				msg.moveType = MoveType::LEFT;
 				activeTetromino->moveLeft();
@@ -181,7 +181,7 @@ void ParentGameEngine::checkPlayersMove()
 			}
 			break;
 		case RIGHT:
-			if (!activeTetromino->checkColision(notActiveTetrominos, moveType, columnsNumber))
+			if (activeTetromino->isColision(notActiveTetrominos, moveType, columnsNumber))
 			{
 				msg.moveType = MoveType::RIGHT;
 				activeTetromino->moveRight();
