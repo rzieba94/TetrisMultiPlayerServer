@@ -123,7 +123,7 @@ bool Tetromino::checkColision(TetrisShape & tetrisShape, MoveType moveType, int 
 
 bool Tetromino::checkColision(sf::Vector2i currentBrickPosition, int boardWidth, list<shared_ptr<Brick>> otherBricksList)
 {
-	if (currentBrickPosition.x < 0 || currentBrickPosition.x >= boardWidth || currentBrickPosition.y >= 400) // TODO: wysokosc planszy powinna byc stala, nie zahardcodowana
+	if (currentBrickPosition.x < 0 || currentBrickPosition.x >= boardWidth || currentBrickPosition.y >= 20) // TODO: wysokosc planszy powinna byc stala, nie zahardcodowana
 	{
 		return true;
 	}

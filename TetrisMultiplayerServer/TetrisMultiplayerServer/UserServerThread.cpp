@@ -39,7 +39,7 @@ void UserServerThread::run()
 		packet.clear();
 		packet = remoteUser->receive();
 		packet >> cmd;
-		//std::this_thread::sleep_for(std::chrono::microseconds(200));
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
 	cout << "koniec gry" << endl;
 }

@@ -34,18 +34,22 @@ void ParentGameEngine::moveDownAllActiveBlocks()
 {
 	for (shared_ptr<RemoteUser> player : usersList)
 	{
-		player->getActiveTetromino()->moveDown();
-		MoveMsg msg;
-		msg.cmd = Cmds::move;
-		msg.moveType = MoveType::DOWN;
-		msg.userId = player->getNick(); //TODO: zmienic na id uzytkownika
-		msg.dropCount = 0;
-		sf::Packet packet;
-		packet << msg.cmd << msg.moveType << msg.userId << msg.dropCount;
-
-		for (shared_ptr<RemoteUser> playerr : usersList)
+		shared_ptr<Tetromino> activeTetromino = player->getActiveTetromino();
+		if (!activeTetromino->checkColision(notActiveTetrominos, DOWN, columnsNumber))
 		{
-			playerr->send(packet);
+			player->getActiveTetromino()->moveDown();
+			MoveMsg msg;
+			msg.cmd = Cmds::move;
+			msg.moveType = MoveType::DOWN;
+			msg.userId = player->getNick(); //TODO: zmienic na id uzytkownika
+			msg.dropCount = 0;
+			sf::Packet packet;
+			packet << msg.cmd << msg.moveType << msg.userId << msg.dropCount;
+
+			for (shared_ptr<RemoteUser> playerr : usersList)
+			{
+				playerr->send(packet);
+			}
 		}
 	}
 }
@@ -161,7 +165,7 @@ void ParentGameEngine::checkPlayersMove()
 		switch (moveType)
 		{
 		case DOWN:
-			if (activeTetromino->checkColision(notActiveTetrominos, moveType, columnsNumber))
+			if (!activeTetromino->checkColision(notActiveTetrominos, moveType, columnsNumber))
 			{
 				msg.moveType = MoveType::DOWN;
 				activeTetromino->moveDown();
@@ -169,7 +173,7 @@ void ParentGameEngine::checkPlayersMove()
 			}
 			break;
 		case LEFT:
-			if (activeTetromino->checkColision(notActiveTetrominos, moveType, columnsNumber))
+			if (!activeTetromino->checkColision(notActiveTetrominos, moveType, columnsNumber))
 			{
 				msg.moveType = MoveType::LEFT;
 				activeTetromino->moveLeft();
@@ -177,7 +181,7 @@ void ParentGameEngine::checkPlayersMove()
 			}
 			break;
 		case RIGHT:
-			if (activeTetromino->checkColision(notActiveTetrominos, moveType, columnsNumber))
+			if (!activeTetromino->checkColision(notActiveTetrominos, moveType, columnsNumber))
 			{
 				msg.moveType = MoveType::RIGHT;
 				activeTetromino->moveRight();
