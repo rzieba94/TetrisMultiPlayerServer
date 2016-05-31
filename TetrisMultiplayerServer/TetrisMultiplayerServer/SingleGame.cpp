@@ -16,7 +16,7 @@ SingleGame::~SingleGame()
 void SingleGame::run()
 {
 	
-	cout << "Uzytkownik " << usersList.front()->getNick() << " rozpoczal nowa gre pojedyncza";
+	cout << "Uzytkownik " << usersList.front()->getNick() << " rozpoczal nowa gre pojedyncza" << endl;
 	sendStartGameMsg();
 	placeNewTetromino();
 	while (true)
@@ -27,7 +27,7 @@ void SingleGame::run()
 		{
 			if (!placeNewTetromino())
 			{
-				cout << "Uzytkownik " << usersList.front()->getNick() << " zakonczyl gre pojedyncza";
+				cout << "Uzytkownik " << usersList.front()->getNick() << " zakonczyl gre pojedyncza"<<endl;
 				sendEndGameMsg();
 				return;
 			}

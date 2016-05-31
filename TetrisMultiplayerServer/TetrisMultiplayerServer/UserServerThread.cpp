@@ -84,6 +84,10 @@ void UserServerThread::forwardMove(sf::Packet packet)
 	{
 		game->registerMove(shared_ptr<UserMove>(new UserMove(remoteUser, RIGHT)));
 	}
+	else if (msg.moveType == MoveType::ROTATE)
+	{
+		game->registerMove(shared_ptr<UserMove>(new UserMove(remoteUser, ROTATE)));
+	}
 }
 
 void UserServerThread::sendWaitingGames(sf::Packet packet)

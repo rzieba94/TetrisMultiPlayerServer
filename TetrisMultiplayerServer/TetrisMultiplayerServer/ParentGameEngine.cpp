@@ -188,6 +188,14 @@ void ParentGameEngine::checkPlayersMove()
 				isSuccess = true;
 			}
 			break;
+		case ROTATE:
+			if (!activeTetromino->isColision(notActiveTetrominos, moveType, columnsNumber))
+			{
+				msg.moveType = MoveType::ROTATE;
+				activeTetromino->rotate();
+				isSuccess = true;
+			}
+			break;
 		case DROP:
 			int dropCount = activeTetromino->getDropCount(notActiveTetrominos, columnsNumber);
 			if (dropCount > 0)
@@ -204,7 +212,6 @@ void ParentGameEngine::checkPlayersMove()
 		{
 			sf::Packet packet;
 			packet << msg.cmd << msg.moveType << msg.userId << msg.dropCount;
-			cout << "check" << endl;
 			for (shared_ptr<RemoteUser> playerr : usersList)
 			{
 				playerr->send(packet);
