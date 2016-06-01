@@ -84,7 +84,6 @@ void CooperationGame::sendWaitingMsg(int time)
 	packet << msg.cmd << msg.waitingtime;
 	for (shared_ptr<RemoteUser> player : usersList)
 	{
-		cout << "derp" << endl;
 		player->send(packet);
 	}
 }
