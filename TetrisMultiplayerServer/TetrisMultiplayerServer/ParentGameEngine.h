@@ -20,6 +20,8 @@ public:
 	void startThread();
 	void registerMove(shared_ptr<UserMove> userMove);
 	void addPlayer(shared_ptr<RemoteUser> player);
+	int gameId;
+	list<shared_ptr<RemoteUser>> usersList;
 protected:
 	void checkPlayersMove();
 	virtual void run() = 0;
@@ -35,13 +37,13 @@ protected:
 	int columnsNumber;
 	GameType gameType;
 	int playersNumber;
-	int gameId;
+	
 	TetrominoFactory tetrominoFactory;
 	thread gameThread;
 	concurrency::concurrent_queue<shared_ptr<UserMove>> moveQueue;
 	clock_t startTime;
 	shared_ptr<TetrominosGroup> notActiveTetrominos;
-	list<shared_ptr<RemoteUser>> usersList;
+
 	static const int FRAME_DURATION = 1000;
 };
 

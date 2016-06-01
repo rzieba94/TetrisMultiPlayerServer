@@ -66,7 +66,7 @@ struct GamesList
 {
 	int cmd; //gamesList
 	list<int> gamesIds; // id gier oczekujacych na graczy
-	list<int> gameType; //typy gier oczekujacych na graczy
+	list<string> nickNames; //typy gier oczekujacych na graczy
 };
 
 //klient wysyla aby polaczyc sie do istniejacej gry
