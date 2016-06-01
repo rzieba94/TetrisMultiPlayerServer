@@ -28,8 +28,9 @@ void UserServerThread::run()
 
 	int cmd = Cmds::connStatus;
 	
-	while (cmd != Cmds::endServer)
+	while (cmd != Cmds::endServer) //endGame JU¯ NIE ROZ£¥CZA!!
 	{
+		//TODO: Dorobiæ roz³¹czanie na timeout
 		if(cmd == Cmds::startGame) startNewGame(packet);
 		else if (cmd == Cmds::move) forwardMove(packet);
 		else if (cmd == Cmds::getGamesList) sendWaitingGames(packet);
@@ -92,6 +93,25 @@ void UserServerThread::forwardMove(sf::Packet packet)
 
 void UserServerThread::sendWaitingGames(sf::Packet packet)
 {
+	GamesList msg;
+	msg.cmd = Cmds::getGamesList;
+	list<int> gamesIds;
+	list<string> nicknames;
+	for (shared_ptr<ParentGameEngine> game : gamesList)
+	{
+		gamesIds.push_back(game->gameId);
+		string gameUsersNicknames = "";
+		for (shared_ptr<RemoteUser> user : game->usersList)
+		{
+			gameUsersNicknames += user->getNick + ";";
+		}
+		nicknames.push_back(gameUsersNicknames);
+	}
+	msg.gamesIds = gamesIds;
+	msg.nickNames = nicknames;
+
+	sf::Packet gamesPacket;
+	gamesPacket << msg.cmd << msg.gamesIds << msg.nickNames;
 
 }
 
