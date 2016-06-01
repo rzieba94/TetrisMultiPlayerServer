@@ -24,7 +24,7 @@ void CooperationGame::run()
 		while (true)
 		{
 			checkPlayersMove();
-			notActiveTetrominos.clearLine(getLineToClear());
+			notActiveTetrominos->clearLine(getLineToClear());
 			for (shared_ptr<RemoteUser> player : usersList)
 			{
 				if (checkForInactiveBlock(player))

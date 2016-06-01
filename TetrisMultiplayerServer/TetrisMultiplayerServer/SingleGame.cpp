@@ -22,7 +22,7 @@ void SingleGame::run()
 	while (true)
 	{
 		checkPlayersMove();
-		notActiveTetrominos.clearLine(getLineToClear());
+		notActiveTetrominos->clearLine(getLineToClear());
 		if (checkForInactiveBlock())
 		{
 			if (!placeNewTetromino())

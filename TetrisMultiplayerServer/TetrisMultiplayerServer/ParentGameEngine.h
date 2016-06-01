@@ -30,6 +30,7 @@ protected:
 	int getLineToClear();
 	void sendStartGameMsg();
 	void sendEndGameMsg(shared_ptr<RemoteUser> player);
+	shared_ptr<TetrominosGroup> getAllOtherTetrominos(shared_ptr<RemoteUser> user);
 
 	int columnsNumber;
 	GameType gameType;
@@ -39,7 +40,7 @@ protected:
 	thread gameThread;
 	concurrency::concurrent_queue<shared_ptr<UserMove>> moveQueue;
 	clock_t startTime;
-	TetrominosGroup notActiveTetrominos;
+	shared_ptr<TetrominosGroup> notActiveTetrominos;
 	list<shared_ptr<RemoteUser>> usersList;
 	static const int FRAME_DURATION = 1000;
 };

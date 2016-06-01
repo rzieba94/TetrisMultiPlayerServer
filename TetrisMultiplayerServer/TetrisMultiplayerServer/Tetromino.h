@@ -15,8 +15,8 @@ public:
 	void moveLeft();
 	void moveDown();
 	void drop(int rowsCount);
-	int getDropCount(TetrisShape & tetrisShape, int boardWidth);
-	bool isColision(TetrisShape & tetrisShape, MoveType moveType, int boardWidth);
+	int getDropCount(shared_ptr<TetrisShape> tetrisShape, int boardWidth);
+	bool isColision(shared_ptr<TetrisShape> tetrisShape, MoveType moveType, int boardWidth);
 	void clearLine(int lineNumber);
 	list<shared_ptr<Brick>> getBricksList();
 	TetrominoType getTetrominoType();

@@ -4,7 +4,8 @@
 using namespace std;
 
 ParentGameEngine::ParentGameEngine(shared_ptr<RemoteUser> ownerUser, int gameId, int playersNumber, GameType gameType, int columnsNumber)
-	: notActiveTetrominos(sf::Vector2i(columnsNumber/2, 10)), tetrominoFactory(), moveQueue(), gameId(gameId), playersNumber(playersNumber), gameType(gameType), columnsNumber(columnsNumber)
+	: notActiveTetrominos(shared_ptr<TetrominosGroup> (new TetrominosGroup(sf::Vector2i(columnsNumber/2, 10)))), tetrominoFactory(), moveQueue(),
+		gameId(gameId), playersNumber(playersNumber), gameType(gameType), columnsNumber(columnsNumber)
 {
 	this->startTime = clock();
 	this->usersList.push_back(ownerUser);
@@ -41,7 +42,7 @@ void ParentGameEngine::moveDownAllActiveBlocks()
 			MoveMsg msg;
 			msg.cmd = Cmds::move;
 			msg.moveType = MoveType::DOWN;
-			msg.userId = player->getNick(); //TODO: zmienic na id uzytkownika
+			msg.userId = player->getNick();
 			msg.dropCount = 0;
 			sf::Packet packet;
 			packet << msg.cmd << msg.moveType << msg.userId << msg.dropCount;
@@ -87,10 +88,10 @@ int ParentGameEngine::getLineToClear()
 {
 	int lineNumber = -1;
 
-	list<shared_ptr<Brick>> bricksList = notActiveTetrominos.getBricksList();
+	list<shared_ptr<Brick>> bricksList = notActiveTetrominos->getBricksList();
 	vector <int> bricksInRowsCounter(20, 0);
 
-	for (shared_ptr<Brick> brick : notActiveTetrominos.getBricksList())
+	for (shared_ptr<Brick> brick : notActiveTetrominos->getBricksList())
 	{
 		sf::Vector2i brickPosition = brick->getPosition();
 		int brickRow = brickPosition.y;
@@ -138,13 +139,27 @@ bool ParentGameEngine::checkForInactiveBlock(shared_ptr<RemoteUser> player)
 	shared_ptr<Tetromino> activeTetromino = player->getActiveTetromino();
 	if (activeTetromino->isColision(notActiveTetrominos, DOWN, columnsNumber))
 	{
-		notActiveTetrominos.addTetrisShape(activeTetromino);
+		notActiveTetrominos->addTetrisShape(activeTetromino);
 		return true;
 	}
 	else
 	{
 		return false;
 	}
+}
+
+shared_ptr<TetrominosGroup> ParentGameEngine::getAllOtherTetrominos(shared_ptr<RemoteUser> user)
+{
+	shared_ptr<TetrominosGroup> allOtherTetrominos = shared_ptr<TetrominosGroup>(new TetrominosGroup(sf::Vector2i(columnsNumber / 2, 10)));
+	allOtherTetrominos->addTetrisShape(notActiveTetrominos);
+	for (shared_ptr<RemoteUser> player : usersList)
+	{
+		if (player->getNick() != user->getNick())
+		{
+			allOtherTetrominos->addTetrisShape(player->getActiveTetromino());
+		}
+	}
+	return allOtherTetrominos;
 }
 
 void ParentGameEngine::checkPlayersMove()
@@ -161,11 +176,13 @@ void ParentGameEngine::checkPlayersMove()
 		msg.cmd = Cmds::move;
 		msg.userId = user->getNick();
 		msg.dropCount = 0;
+
+		shared_ptr<TetrominosGroup> allOtherTetrominos = getAllOtherTetrominos(user);
 		
 		switch (moveType)
 		{
 		case DOWN:
-			if (!activeTetromino->isColision(notActiveTetrominos, moveType, columnsNumber))
+			if (!activeTetromino->isColision(allOtherTetrominos, moveType, columnsNumber))
 			{
 				msg.moveType = MoveType::DOWN;
 				activeTetromino->moveDown();
@@ -173,7 +190,7 @@ void ParentGameEngine::checkPlayersMove()
 			}
 			break;
 		case LEFT:
-			if (!activeTetromino->isColision(notActiveTetrominos, moveType, columnsNumber))
+			if (!activeTetromino->isColision(allOtherTetrominos, moveType, columnsNumber))
 			{
 				msg.moveType = MoveType::LEFT;
 				activeTetromino->moveLeft();
@@ -181,7 +198,7 @@ void ParentGameEngine::checkPlayersMove()
 			}
 			break;
 		case RIGHT:
-			if (!activeTetromino->isColision(notActiveTetrominos, moveType, columnsNumber))
+			if (!activeTetromino->isColision(allOtherTetrominos, moveType, columnsNumber))
 			{
 				msg.moveType = MoveType::RIGHT;
 				activeTetromino->moveRight();
@@ -189,7 +206,7 @@ void ParentGameEngine::checkPlayersMove()
 			}
 			break;
 		case ROTATE:
-			if (!activeTetromino->isColision(notActiveTetrominos, moveType, columnsNumber))
+			if (!activeTetromino->isColision(allOtherTetrominos, moveType, columnsNumber))
 			{
 				msg.moveType = MoveType::ROTATE;
 				activeTetromino->rotate();
@@ -197,7 +214,7 @@ void ParentGameEngine::checkPlayersMove()
 			}
 			break;
 		case DROP:
-			int dropCount = activeTetromino->getDropCount(notActiveTetrominos, columnsNumber);
+			int dropCount = activeTetromino->getDropCount(allOtherTetrominos, columnsNumber);
 			if (dropCount > 0)
 			{
 				msg.moveType = MoveType::DROP;

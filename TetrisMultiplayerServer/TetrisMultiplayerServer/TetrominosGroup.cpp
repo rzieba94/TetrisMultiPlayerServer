@@ -59,9 +59,9 @@ void TetrominosGroup::deleteUnusedShapes()
 		{
 			it = tetrisShapesList.erase(it);
 		}
-		else if (it != tetrisShapesList.end())
+		else
 		{
-			it++;
+			++it;
 		}
 	}
 }

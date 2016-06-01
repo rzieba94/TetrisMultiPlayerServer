@@ -55,9 +55,9 @@ void Tetromino::drop(int rowsCount)
 	}
 }
 
-int Tetromino::getDropCount(TetrisShape & tetrisShape, int boardWidth)
+int Tetromino::getDropCount(shared_ptr<TetrisShape> tetrisShape, int boardWidth)
 {
-	list<shared_ptr<Brick>> otherBricksList = tetrisShape.getBricksList();
+	list<shared_ptr<Brick>> otherBricksList = tetrisShape->getBricksList();
 	
 	list<sf::Vector2i> brickPositions;
 	for (shared_ptr<Brick> brick : bricksList)
@@ -83,10 +83,10 @@ int Tetromino::getDropCount(TetrisShape & tetrisShape, int boardWidth)
 	return dropCounter;
 }
 
-bool Tetromino::isColision(TetrisShape & tetrisShape, MoveType moveType, int boardWidth)
+bool Tetromino::isColision(shared_ptr<TetrisShape> tetrisShape, MoveType moveType, int boardWidth)
 {
 	sf::Vector2i moveVector;
-	list<shared_ptr<Brick>> otherBricksList = tetrisShape.getBricksList();
+	list<shared_ptr<Brick>> otherBricksList = tetrisShape->getBricksList();
 	switch (moveType)
 	{
 	case DOWN:
@@ -160,10 +160,7 @@ void Tetromino::clearLine(int lineNumber)
 				{
 					(*it)->move(sf::Vector2i(0, 1));
 				}
-				if (it != bricksList.end())
-				{
-					it++;
-				}
+				++it;
 			}
 		}
 	}
