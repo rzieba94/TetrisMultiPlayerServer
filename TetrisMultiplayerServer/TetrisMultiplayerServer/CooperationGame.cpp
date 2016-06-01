@@ -56,7 +56,7 @@ void CooperationGame::run()
 bool CooperationGame::waitForPlayers()
 {
 	clock_t waitingTime = clock();
-	int waitingCounter = 60;
+	int waitingCounter = 61;
 
 	while (waitingCounter > 0 && usersList.size() != playersNumber)
 	{
@@ -73,6 +73,7 @@ bool CooperationGame::waitForPlayers()
 
 void CooperationGame::sendWaitingMsg(int time)
 {
+	cout << time << endl;
 	WaitingTime msg;
 	msg.cmd = Cmds::waiting;
 	msg.waitingtime = time;

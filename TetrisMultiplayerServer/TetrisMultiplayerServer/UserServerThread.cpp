@@ -12,8 +12,7 @@ UserServerThread::~UserServerThread()
 
 void UserServerThread::launchUserThread()
 {
-	thread t1(&UserServerThread::run, this);
-	t1.join();
+	thread(&UserServerThread::run, this).detach();
 }
 
 void UserServerThread::run()
@@ -29,7 +28,7 @@ void UserServerThread::run()
 
 	int cmd = Cmds::connStatus;
 	
-	while (cmd != Cmds::endGame)
+	while (cmd != Cmds::endServer)
 	{
 		if(cmd == Cmds::startGame) startNewGame(packet);
 		else if (cmd == Cmds::move) forwardMove(packet);
@@ -60,6 +59,7 @@ void UserServerThread::startNewGame(sf::Packet packet)
 	else if (msg.gameType == GameType::cooperation)
 	{
 		game = shared_ptr<ParentGameEngine>(new CooperationGame(remoteUser, getCurrentGameId(), msg.playersNumber));
+		game->startThread();
 		gamesList.push_back(game);
 	}
 }
