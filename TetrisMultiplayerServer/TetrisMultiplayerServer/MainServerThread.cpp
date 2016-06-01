@@ -19,7 +19,7 @@ void MainServerThread::launchServerThread()
 void MainServerThread::run()
 {
 	cout << "Rozpoczeto nasluchiwanie na porcie: " << portNumber << endl;
-
+	gamesList = new list<shared_ptr<ParentGameEngine>>();
 	while (true)
 	{
 		sf::TcpListener listener;

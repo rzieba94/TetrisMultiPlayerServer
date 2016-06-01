@@ -56,7 +56,7 @@ void CooperationGame::run()
 bool CooperationGame::waitForPlayers()
 {
 	clock_t waitingTime = clock();
-	int waitingCounter = 61;
+	int waitingCounter = 1061;
 
 	while (waitingCounter > 0 && usersList.size() != playersNumber)
 	{
@@ -73,7 +73,6 @@ bool CooperationGame::waitForPlayers()
 
 void CooperationGame::sendWaitingMsg(int time)
 {
-	cout << time << endl;
 	WaitingTime msg;
 	msg.cmd = Cmds::waiting;
 	msg.waitingtime = time;
@@ -81,6 +80,7 @@ void CooperationGame::sendWaitingMsg(int time)
 	packet << msg.cmd << msg.waitingtime;
 	for (shared_ptr<RemoteUser> player : usersList)
 	{
+		cout << "derp" << endl;
 		player->send(packet);
 	}
 }

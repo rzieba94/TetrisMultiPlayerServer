@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "UserServerThread.h"
+#include <string>
 
 
-UserServerThread::UserServerThread(shared_ptr<RemoteUser> remoteUser, list<shared_ptr<ParentGameEngine>> & gamesList) : remoteUser(remoteUser), gamesList(gamesList)
+UserServerThread::UserServerThread(shared_ptr<RemoteUser> remoteUser, list<shared_ptr<ParentGameEngine>> *gamesList) : remoteUser(remoteUser), gamesList(gamesList)
 {
 }
 
@@ -54,14 +55,14 @@ void UserServerThread::startNewGame(sf::Packet packet)
 	{
 		remoteUser->setStartPosition(sf::Vector2i(5, 2));
 		game = shared_ptr<ParentGameEngine> (new SingleGame(remoteUser, getCurrentGameId()));
+		gamesList->push_back(game);
 		game->startThread();
-		gamesList.push_back(game);
 	}
 	else if (msg.gameType == GameType::cooperation)
 	{
 		game = shared_ptr<ParentGameEngine>(new CooperationGame(remoteUser, getCurrentGameId(), msg.playersNumber));
+		gamesList->push_back(game);
 		game->startThread();
-		gamesList.push_back(game);
 	}
 }
 
@@ -93,31 +94,48 @@ void UserServerThread::forwardMove(sf::Packet packet)
 
 void UserServerThread::sendWaitingGames(sf::Packet packet)
 {
+	
 	GamesList msg;
 	msg.cmd = Cmds::getGamesList;
-	list<int> gamesIds;
-	list<string> nicknames;
-	for (shared_ptr<ParentGameEngine> game : gamesList)
+	string gamesIds = "";
+	string nicknames = "";
+
+	for (shared_ptr<ParentGameEngine> game : *gamesList)
 	{
-		gamesIds.push_back(game->gameId);
-		string gameUsersNicknames = "";
-		for (shared_ptr<RemoteUser> user : game->usersList)
+		
+		if(game->gameType == GameType::cooperation)
 		{
-			gameUsersNicknames += user->getNick + ";";
+			gamesIds += std::to_string(game->gameId) + ";";
+			string gameUsersNicknames = "";
+			for (shared_ptr<RemoteUser> user : game->usersList)
+			{
+				gameUsersNicknames += user->getNick() + ", ";
+			}
+			nicknames+= gameUsersNicknames + "|";
 		}
-		nicknames.push_back(gameUsersNicknames);
+
 	}
 	msg.gamesIds = gamesIds;
 	msg.nickNames = nicknames;
-
 	sf::Packet gamesPacket;
 	gamesPacket << msg.cmd << msg.gamesIds << msg.nickNames;
-
+	remoteUser->send(gamesPacket);
 }
 
 void UserServerThread::connectToGame(sf::Packet packet)
 {
-
+	ConnectToGame conn;
+	packet >> conn.gameId;
+	cout << "connect: " << conn.gameId << endl;
+	for (shared_ptr<ParentGameEngine> game : *gamesList)
+	{
+		if (game->gameId == conn.gameId)
+		{
+			cout << "connected" << endl;
+			game->addPlayer(remoteUser);
+			break;
+		}
+	}
 }
 
 int UserServerThread::getCurrentGameId()

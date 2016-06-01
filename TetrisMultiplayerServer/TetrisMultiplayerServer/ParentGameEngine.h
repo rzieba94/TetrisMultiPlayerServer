@@ -22,6 +22,7 @@ public:
 	void addPlayer(shared_ptr<RemoteUser> player);
 	int gameId;
 	list<shared_ptr<RemoteUser>> usersList;
+	GameType gameType;
 protected:
 	void checkPlayersMove();
 	virtual void run() = 0;
@@ -35,7 +36,7 @@ protected:
 	shared_ptr<TetrominosGroup> getAllOtherTetrominos(shared_ptr<RemoteUser> user);
 
 	int columnsNumber;
-	GameType gameType;
+	
 	int playersNumber;
 	
 	TetrominoFactory tetrominoFactory;

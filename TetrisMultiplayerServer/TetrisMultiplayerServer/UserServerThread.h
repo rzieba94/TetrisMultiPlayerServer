@@ -8,7 +8,7 @@
 class UserServerThread
 {
 public:
-	UserServerThread(shared_ptr<RemoteUser> remoteUser, list<shared_ptr<ParentGameEngine>> & gamesList);
+	UserServerThread(shared_ptr<RemoteUser> remoteUser, list<shared_ptr<ParentGameEngine>>* gamesList);
 	~UserServerThread();
 	void launchUserThread();
 private: 
@@ -21,6 +21,6 @@ private:
 
 	shared_ptr<RemoteUser> remoteUser;
 	shared_ptr<ParentGameEngine> game;
-	list<shared_ptr<ParentGameEngine>> gamesList;
+	list<shared_ptr<ParentGameEngine>>* gamesList;
 };
 
