@@ -86,7 +86,7 @@ int Tetromino::getDropCount(shared_ptr<TetrisShape> tetrisShape, int boardWidth)
 bool Tetromino::isColision(shared_ptr<TetrisShape> tetrisShape, MoveType moveType, int boardWidth)
 {
 	sf::Vector2i moveVector;
-	list<shared_ptr<Brick>> otherBricksList = tetrisShape->getBricksList();
+	list<shared_ptr<Brick>> otherBricksList = tetrisShape->getBricksList();//GAMEBREAKING BUG - przychodzi pusta tablica
 	switch (moveType)
 	{
 	case DOWN:

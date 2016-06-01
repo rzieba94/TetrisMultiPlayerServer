@@ -12,5 +12,7 @@ private:
 	void sendWaitingMsg(int time);
 	void sendTimeoutMsg();
 	bool checkIfGameEnded();
+	void sendlLoseMsg(shared_ptr<RemoteUser> player);
+	void sendWinMessage(shared_ptr<RemoteUser> player);
 };
 

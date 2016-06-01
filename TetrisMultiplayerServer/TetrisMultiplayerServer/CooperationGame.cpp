@@ -34,6 +34,10 @@ void CooperationGame::run()
 						cout << "Uzytkownik " << player->getNick() << " zakonczyl gre wspolna";
 						sendEndGameMsg(player);
 						usersList.remove(player);
+						for (shared_ptr<RemoteUser> player : usersList)
+						{
+							sendlLoseMsg(player);
+						}
 					}
 				}
 			}
@@ -103,11 +107,34 @@ bool CooperationGame::checkIfGameEnded()
 	if (usersList.size() == 1)
 	{
 		cout << "Gra wspolna zostala zakonczona.";
-		sendEndGameMsg(usersList.front());
+		sendWinMessage(usersList.front());
 		return true;
 	}
 	else
 	{
 		return false;
 	}
+}
+
+void CooperationGame::sendWinMessage(shared_ptr<RemoteUser> player)
+{
+	SimpleCommand msg;
+	msg.cmd = Cmds::endGame;
+	msg.winner = true;
+	sf::Packet packet;
+	packet << msg.cmd << msg.winner;
+	player->send(packet);
+	player->setScore(0);
+}
+
+void CooperationGame::sendlLoseMsg(shared_ptr<RemoteUser> player)
+{
+	sendUserLost lost;
+	lost.cmd = Cmds::userLost;
+	lost.nick = player->getNick();
+	lost.score = player->getScore();
+	sf::Packet losePacket;
+	losePacket.clear();
+	losePacket << lost.cmd << lost.nick << lost.score;
+	player->send(losePacket);
 }
