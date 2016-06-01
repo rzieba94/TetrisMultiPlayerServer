@@ -60,6 +60,7 @@ void UserServerThread::startNewGame(sf::Packet packet)
 	}
 	else if (msg.gameType == GameType::cooperation)
 	{
+		remoteUser->setStartPosition(sf::Vector2i(5, 2));
 		game = shared_ptr<ParentGameEngine>(new CooperationGame(remoteUser, getCurrentGameId(), msg.playersNumber));
 		gamesList->push_back(game);
 		game->startThread();
@@ -132,6 +133,7 @@ void UserServerThread::connectToGame(sf::Packet packet)
 		if (game->gameId == conn.gameId)
 		{
 			cout << "connected" << endl;
+			remoteUser->setStartPosition(sf::Vector2i(5, 2));
 			game->addPlayer(remoteUser);
 			break;
 		}

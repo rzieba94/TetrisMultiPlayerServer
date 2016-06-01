@@ -60,7 +60,7 @@ void CooperationGame::run()
 bool CooperationGame::waitForPlayers()
 {
 	clock_t waitingTime = clock();
-	int waitingCounter = 1061;
+	int waitingCounter = 901;
 
 	while (waitingCounter > 0 && usersList.size() != playersNumber)
 	{
