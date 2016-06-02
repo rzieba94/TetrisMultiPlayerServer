@@ -42,7 +42,7 @@ void UserServerThread::run()
 		packet >> cmd;
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
-	cout << "koniec gry" << endl;
+	cout << "Odlaczam usera" << endl;
 }
 
 void UserServerThread::startNewGame(sf::Packet packet)
@@ -50,7 +50,6 @@ void UserServerThread::startNewGame(sf::Packet packet)
 	cout << endl << "Rozpoczecie nowej gry" << endl;
 	StartGame msg;
 	packet >> msg.gameType >> msg.playersNumber >> msg.userIds;
-	cout << msg.gameType << endl;
 	if(msg.gameType == GameType::single)
 	{
 		remoteUser->setStartPosition(sf::Vector2i(5, 2));
