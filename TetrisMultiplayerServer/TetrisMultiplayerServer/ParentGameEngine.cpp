@@ -241,6 +241,7 @@ void ParentGameEngine::checkPlayersMove()
 
 void ParentGameEngine::addPlayer(shared_ptr<RemoteUser> player)
 {
+	player->setStartPosition(sf::Vector2i(usersList.size() * 10 + 5, 2));
 	usersList.push_back(player);
 }
 
