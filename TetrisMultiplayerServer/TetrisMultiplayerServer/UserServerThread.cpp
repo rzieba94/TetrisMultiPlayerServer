@@ -129,12 +129,10 @@ void UserServerThread::connectToGame(sf::Packet packet)
 {
 	ConnectToGame conn;
 	packet >> conn.gameId;
-	cout << "connect: " << conn.gameId << endl;
 	for (shared_ptr<ParentGameEngine> gameFromList : *gamesList)
 	{
 		if (gameFromList->gameId == conn.gameId)
 		{
-			cout << "connected" << endl;
 			remoteUser->setStartPosition(sf::Vector2i(5, 2));
 			gameFromList->addPlayer(remoteUser);
 			game = gameFromList;

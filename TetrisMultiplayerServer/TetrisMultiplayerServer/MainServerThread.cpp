@@ -25,13 +25,13 @@ void MainServerThread::run()
 		sf::TcpListener listener;
 		if (listener.listen(portNumber) != sf::Socket::Done)
 		{
-			cout << "Podczas oczekiwania na polaczenie wystapil blad.";
+			cout << "Podczas oczekiwania na polaczenie wystapil blad." << endl;
 		}
 
 		shared_ptr<sf::TcpSocket> clientSocket = shared_ptr<sf::TcpSocket>(new sf::TcpSocket);
 		if (listener.accept(*clientSocket.get()) != sf::Socket::Done)
 		{
-			cout << "Podczas laczenia do serwera wystapil blad.";
+			cout << "Podczas laczenia do serwera wystapil blad." << endl;
 		}
 		sf::Packet packet;
 		clientSocket->receive(packet);
@@ -58,7 +58,7 @@ void MainServerThread::acceptNewConnection(string nick, shared_ptr<sf::TcpSocket
 
 void MainServerThread::rejectNewConnection(shared_ptr<sf::TcpSocket> clientSocket)
 {
-	cout << "Podczas tworzenia watku klienta wystapil blad.";
+	cout << "Podczas tworzenia watku klienta wystapil blad." << endl;
 	ConnectionStatusMsg msg;
 	msg.cmd = Cmds::connStatus;
 	msg.status = "rejected";
