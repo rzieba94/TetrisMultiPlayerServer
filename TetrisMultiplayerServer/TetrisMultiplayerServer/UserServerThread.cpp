@@ -71,26 +71,28 @@ void UserServerThread::forwardMove(sf::Packet packet)
 {
 	MoveMsg msg;
 	packet >> msg.moveType;
-	if (msg.moveType == MoveType::DOWN)
-	{
-		game->registerMove(shared_ptr<UserMove>(new UserMove(remoteUser, DOWN)));
-	}
-	else if (msg.moveType == MoveType::LEFT)
-	{
-		game->registerMove(shared_ptr<UserMove>(new UserMove(remoteUser, LEFT)));
-	}
-	else if (msg.moveType == MoveType::DROP)
-	{
-		game->registerMove(shared_ptr<UserMove>(new UserMove(remoteUser, DROP)));
-	}
-	else if (msg.moveType == MoveType::RIGHT)
-	{
-		game->registerMove(shared_ptr<UserMove>(new UserMove(remoteUser, RIGHT)));
-	}
-	else if (msg.moveType == MoveType::ROTATE)
-	{
-		game->registerMove(shared_ptr<UserMove>(new UserMove(remoteUser, ROTATE)));
-	}
+
+		if (msg.moveType == MoveType::DOWN)
+		{
+			game->registerMove(shared_ptr<UserMove>(new UserMove(remoteUser, DOWN)));
+		}
+		else if (msg.moveType == MoveType::LEFT)
+		{
+			game->registerMove(shared_ptr<UserMove>(new UserMove(remoteUser, LEFT)));
+		}
+		else if (msg.moveType == MoveType::DROP)
+		{
+			game->registerMove(shared_ptr<UserMove>(new UserMove(remoteUser, DROP)));
+		}
+		else if (msg.moveType == MoveType::RIGHT)
+		{
+			game->registerMove(shared_ptr<UserMove>(new UserMove(remoteUser, RIGHT)));
+		}
+		else if (msg.moveType == MoveType::ROTATE)
+		{
+			game->registerMove(shared_ptr<UserMove>(new UserMove(remoteUser, ROTATE)));
+		}
+	
 }
 
 void UserServerThread::sendWaitingGames(sf::Packet packet)
@@ -128,13 +130,14 @@ void UserServerThread::connectToGame(sf::Packet packet)
 	ConnectToGame conn;
 	packet >> conn.gameId;
 	cout << "connect: " << conn.gameId << endl;
-	for (shared_ptr<ParentGameEngine> game : *gamesList)
+	for (shared_ptr<ParentGameEngine> gameFromList : *gamesList)
 	{
-		if (game->gameId == conn.gameId)
+		if (gameFromList->gameId == conn.gameId)
 		{
 			cout << "connected" << endl;
 			remoteUser->setStartPosition(sf::Vector2i(5, 2));
-			game->addPlayer(remoteUser);
+			gameFromList->addPlayer(remoteUser);
+			game = gameFromList;
 			break;
 		}
 	}

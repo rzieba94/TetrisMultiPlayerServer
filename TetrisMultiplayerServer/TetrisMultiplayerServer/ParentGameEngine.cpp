@@ -247,7 +247,18 @@ void ParentGameEngine::addPlayer(shared_ptr<RemoteUser> player)
 
 void ParentGameEngine::registerMove(shared_ptr<UserMove> userMove)
 {
-	moveQueue.push(userMove);
+	try
+	{
+		moveQueue.push(userMove);
+	}
+	catch (const std::runtime_error& re)
+	{
+		std::cerr << "Runtime error: " << re.what() << std::endl;
+	}
+	catch (const std::exception& ex)
+	{
+		std::cerr << "Error occurred: " << ex.what() << std::endl;
+	}
 }
 
 void ParentGameEngine::sendStartGameMsg()
